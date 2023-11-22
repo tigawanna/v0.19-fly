@@ -1,9 +1,16 @@
+// @ts-check
 /// <reference path="../pb_data/types.d.ts" />
 routerAdd(
   "GET",
   "/custom_pocketbook_posts",
   (c) => {
     try {
+      function isParamEmpty(param, default_value) {
+        if (param === "" || param === undefined || param === null) {
+          return default_value;
+        }
+        return param;
+      }
       const result = arrayOf(
         new DynamicModel({
           creator_id: "",
@@ -24,9 +31,9 @@ routerAdd(
       );
 
       $app
-        .dao()
-        .db()
-        .newQuery(
+        ?.dao()
+        ?.db()
+        ?.newQuery(
           `
       SELECT 
 pp.user creator_id,
@@ -58,21 +65,19 @@ ORDER BY pp.created DESC, pp.id DESC
 LIMIT {:limit}
       `
         )
-        .bind({
+        ?.bind({
           user: c.queryParam("user"),
           id: c.queryParam("id"),
-          created: c.queryParam("created"),
           depth: c.queryParam("depth"),
           profile: c.queryParam("profile"),
-          limit: c.queryParam("limit"),
+          created: isParamEmpty(c.queryParam("created"), new Date().toISOString()),
+          limit: isParamEmpty(c.queryParam("limit"), 5),
         })
-        .all(result); // throw an error on db failure
+        ?.all(result); // throw an error on db failure
 
-      if (result.length > 0) {
-        console.log(result[0].id);
-      }
 
-      return c.json(200, { posts: result });
+
+      return c.json(200, { result });
     } catch (e) {
       return c.json(500, {
         error: " Error getting custom_pocketbook_posts: " + e.message,
@@ -82,3 +87,10 @@ LIMIT {:limit}
 );
 
 // http://127.0.0.1:8090/custom_pocketbook_posts?depth=0&created=2023-11-21T20:44:29+03:00Z&limit=2&profile=general
+// parameters required
+// id: c.queryParam("id") : id of the post we're looking up
+// user: c.queryParam("user") : id of the currently logged in user
+// created: c.queryParam("created") : timestamp of the last post that was created (used for pagination)
+// depth: c.queryParam("depth") : depth of the post(original posts are at depth 0 and replies are at depth n),
+// profile: c.queryParam("profile") : id of the currently logged in user or 'general' to show posts for unlooged in users,
+// limit: c.queryParam("limit") " how many posts per request",

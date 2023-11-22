@@ -1,5 +1,14 @@
+// @ts-check
+/// <reference path="../pb_data/types.d.ts" />
+
 routerAdd("GET", "/one_custom_pocketbook_post", (c) => {
   try {
+    // function isParamEmpty(param, default_value) {
+    //   if (param === "" || param === undefined || param === null) {
+    //     return default_value;
+    //   }
+    //   return param;
+    // }
     const result = new DynamicModel({
       creator_id: "",
       creator_name: "",
@@ -18,9 +27,9 @@ routerAdd("GET", "/one_custom_pocketbook_post", (c) => {
     });
 
     $app
-      .dao()
-      .db()
-      .newQuery(
+      ?.dao()
+      ?.db()
+      ?.newQuery(
         `
 SELECT 
 
@@ -49,17 +58,13 @@ ORDER BY pp.created DESC, pp.id DESC
 
       `
       )
-      .bind({
+      ?.bind({
         user: c.queryParam("user"),
         id: c.queryParam("id"),
       })
-      .one(result); // throw an error on db failure
+      ?.one(result); // throw an error on db failure
 
-    if (result.length > 0) {
-      console.log(result[0].id);
-    }
-
-    return c.json(200, { posts: result });
+    return c.json(200, { result });
   } catch (e) {
     return c.json(500, {
       error: "Error getting one_custom_pocketbook_post " + e.message,
@@ -67,3 +72,6 @@ ORDER BY pp.created DESC, pp.id DESC
   }
 });
 // http://127.0.0.1:8090/one_custom_pocketbook_post?id=z2elh8fxauby5xx
+//  parameters required
+// id: c.queryParam("id") : id of the post we're looking up
+// user: c.queryParam("user") : id of the currently logged in user
