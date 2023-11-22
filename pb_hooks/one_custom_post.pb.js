@@ -1,30 +1,27 @@
-routerAdd(
-  "GET",
-  "/one_custom_post",
-  (c) => {
-    try {
-      const result = new DynamicModel({
-        creator_id: "",
-        creator_name: "",
-        creator_image: "",
-        post_id: "",
-        post_body: "",
-        post_media: "",
-        post_parent: "",
-        post_depth: "",
-        created_at: "",
-        likes: "",
-        mylike: "",
-        reaction_id: "",
-        replies: "",
-        myreply: "",
-      });
+routerAdd("GET", "/one_custom_pocketbook_post", (c) => {
+  try {
+    const result = new DynamicModel({
+      creator_id: "",
+      creator_name: "",
+      creator_image: "",
+      post_id: "",
+      post_body: "",
+      post_media: "",
+      post_parent: "",
+      post_depth: "",
+      created_at: "",
+      likes: "",
+      mylike: "",
+      reaction_id: "",
+      replies: "",
+      myreply: "",
+    });
 
-      $app
-        .dao()
-        .db()
-        .newQuery(
-          `
+    $app
+      .dao()
+      .db()
+      .newQuery(
+        `
 SELECT 
 
 pp.user creator_id,
@@ -43,7 +40,7 @@ IFNULL((SELECT  liked FROM pocketbook_reactions WHERE user = {:user} AND post = 
 IFNULL((SELECT id FROM pocketbook_reactions WHERE user = {:user} AND post = pp.id),"virgin") reaction_id,
 
 (SELECT COUNT(*) FROM pocketbook_posts WHERE parent = pp.id AND depth = pp.depth + 1) replies,
-IFNULL((SELECT  id FROM pocketbook_posts WHERE pp.user = {:user} AND parent = pp.id AND depth = pp.depth + 1 ),'virgin') myreply,
+IFNULL((SELECT  id FROM pocketbook_posts WHERE pp.user = {:user} AND parent = pp.id AND depth = pp.depth + 1 ),'virgin') myreply
  
 FROM pocketbook_posts pp
 LEFT JOIN pocketbook_user dv on dv.id = pp.user
@@ -51,21 +48,22 @@ WHERE ( pp.id = {:id})
 ORDER BY pp.created DESC, pp.id DESC
 
       `
-        )
-        .bind({
-          user: c.queryParam("user"),
-          id: c.queryParam("id"),
-        })
-        .one(result); // throw an error on db failure
+      )
+      .bind({
+        user: c.queryParam("user"),
+        id: c.queryParam("id"),
+      })
+      .one(result); // throw an error on db failure
 
-      if (result.length > 0) {
-        console.log(result[0].id);
-      }
-
-      return c.json(200, { posts: result });
-    } catch (e) {
-    return c.json(500, {
-      error: "Error getting one_custom_post " + e.message,
-    });
+    if (result.length > 0) {
+      console.log(result[0].id);
     }
-  })
+
+    return c.json(200, { posts: result });
+  } catch (e) {
+    return c.json(500, {
+      error: "Error getting one_custom_pocketbook_post " + e.message,
+    });
+  }
+});
+// http://127.0.0.1:8090/one_custom_pocketbook_post?id=z2elh8fxauby5xx

@@ -1,33 +1,33 @@
 /// <reference path="../pb_data/types.d.ts" />
 routerAdd(
   "GET",
-  "/custom_posts",
+  "/custom_pocketbook_posts",
   (c) => {
-    try{
-    const result = arrayOf(
-      new DynamicModel({
-        creator_id: "",
-        creator_name: "",
-        creator_image: "",
-        post_id: "",
-        post_body: "",
-        post_media: "",
-        post_parent: "",
-        post_depth: "",
-        created_at: "",
-        likes: "",
-        mylike: "",
-        reaction_id: "",
-        replies: "",
-        myreply: "",
-      })
-    );
+    try {
+      const result = arrayOf(
+        new DynamicModel({
+          creator_id: "",
+          creator_name: "",
+          creator_image: "",
+          post_id: "",
+          post_body: "",
+          post_media: "",
+          post_parent: "",
+          post_depth: "",
+          created_at: "",
+          likes: "",
+          mylike: "",
+          reaction_id: "",
+          replies: "",
+          myreply: "",
+        })
+      );
 
-    $app
-      .dao()
-      .db()
-      .newQuery(
-        `
+      $app
+        .dao()
+        .db()
+        .newQuery(
+          `
       SELECT 
 pp.user creator_id,
 dv.username creator_name,
@@ -57,26 +57,28 @@ WHERE (
 ORDER BY pp.created DESC, pp.id DESC
 LIMIT {:limit}
       `
-      )
-      .bind({
-        user: c.queryParam("user"),
-        id: c.queryParam("id"),
-        created: c.queryParam("created"),
-        depth: c.queryParam("depth"),
-        profile: c.queryParam("profile"),
-        limit: c.queryParam("limit"),
-      })
-      .all(result); // throw an error on db failure
+        )
+        .bind({
+          user: c.queryParam("user"),
+          id: c.queryParam("id"),
+          created: c.queryParam("created"),
+          depth: c.queryParam("depth"),
+          profile: c.queryParam("profile"),
+          limit: c.queryParam("limit"),
+        })
+        .all(result); // throw an error on db failure
 
-    if (result.length > 0) {
-      console.log(result[0].id);
-    }
+      if (result.length > 0) {
+        console.log(result[0].id);
+      }
 
-    return c.json(200, { posts: result });
-        } catch (e) {
-    return c.json(500, {
-      error: " Error getting custom_posts: " + e.message,
-    });
+      return c.json(200, { posts: result });
+    } catch (e) {
+      return c.json(500, {
+        error: " Error getting custom_pocketbook_posts: " + e.message,
+      });
     }
   } /* optional middlewares */
 );
+
+// http://127.0.0.1:8090/custom_pocketbook_posts?depth=0&created=2023-11-21T20:44:29+03:00Z&limit=2&profile=general
