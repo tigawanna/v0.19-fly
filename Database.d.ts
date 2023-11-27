@@ -29,596 +29,677 @@ type ViewCollectionRecord = {
 
 type MaybeArray<T> = T | T[];
 
-// ===== sherpa_user =====
+// ===== pocketbook_user =====
 
-export type SherpaUserResponse = {
+export type PocketbookUserResponse = {
+    avatar?: string;
+	access_token?: string;
+	bio?: string;
+	github_login?: string;
+	github_avatar?: string;
+} & AuthCollectionRecord;
+
+export type PocketbookUserCreate = {
+	avatar?: string | URL;
+	access_token?: string;
+	bio?: string;
+	github_login?: string;
+	github_avatar?: string | URL;
+};
+
+export type PocketbookUserUpdate = {
+	avatar?: string | URL;
+	access_token?: string;
+	bio?: string;
+	github_login?: string;
+	github_avatar?: string | URL;
+};
+
+export type PocketbookUserCollection = {
+	type: 'auth';
+	collectionId: '5sckr8a13top3zs';
+	collectionName: 'pocketbook_user';
+	response: PocketbookUserResponse;
+	create: PocketbookUserCreate;
+	update: PocketbookUserUpdate;
+	relations: {
+		'pocketbook_reactions(user)': PocketbookReactionsCollection[];
+        'pocketbook_posts(user)': PocketbookPostsCollection[];
+        'pocketbook_friends(user_a)': PocketbookFriendsCollection[];
+        'pocketbook_friends(user_b)': PocketbookFriendsCollection[];
+	};
+};
+
+// ===== pocketbook_reactions =====
+
+export type PocketbookReactionsResponse = {
+    post: string;
+	user: string;
+	liked: 'yes' | 'no';
+} & BaseCollectionRecord;
+
+export type PocketbookReactionsCreate = {
+	post: string;
+	user: string;
+	liked: 'yes' | 'no';
+};
+
+export type PocketbookReactionsUpdate = {
+	post?: string;
+	user?: string;
+	liked?: 'yes' | 'no';
+};
+
+export type PocketbookReactionsCollection = {
+	type: 'base';
+	collectionId: '4wcaptlpivjve1o';
+	collectionName: 'pocketbook_reactions';
+	response: PocketbookReactionsResponse;
+	create: PocketbookReactionsCreate;
+	update: PocketbookReactionsUpdate;
+	relations: {
+		post: PocketbookPostsCollection;
+        user: PocketbookUserCollection;
+	};
+};
+
+// ===== mashamba_listings =====
+
+export type MashambaListingsResponse = {
+    location: string;
+	longitude?: number;
+	latitude?: number;
+	description: string;
+	images: Array<string>;
+	amenities?: any;
+	owner?: string;
+	price: number;
+	status: 'available' | 'sold';
+} & BaseCollectionRecord;
+
+export type MashambaListingsCreate = {
+	location: string;
+	longitude?: number;
+	latitude?: number;
+	description: string;
+	images: MaybeArray<string>;
+	amenities?: any;
+	owner?: string;
+	price: number;
+	status: 'available' | 'sold';
+};
+
+export type MashambaListingsUpdate = {
+	location?: string;
+	longitude?: number;
+	'longitude+'?: number;
+	'longitude-'?: number;
+	latitude?: number;
+	'latitude+'?: number;
+	'latitude-'?: number;
+	description?: string;
+	images?: MaybeArray<string>;
+	'images-'?: MaybeArray<string>;
+	amenities?: any;
+	owner?: string;
+	price?: number;
+	'price+'?: number;
+	'price-'?: number;
+	status?: 'available' | 'sold';
+};
+
+export type MashambaListingsCollection = {
+	type: 'base';
+	collectionId: '7yy4zq0mtyj546q';
+	collectionName: 'mashamba_listings';
+	response: MashambaListingsResponse;
+	create: MashambaListingsCreate;
+	update: MashambaListingsUpdate;
+	relations: {
+		owner: MashambaOwnerCollection;
+	};
+};
+
+// ===== mashamba_owner =====
+
+export type MashambaOwnerResponse = {
+    name: string;
+	email: string;
+	phone: string;
+	location: string;
+	image: string;
+	whatsapp?: string;
+} & BaseCollectionRecord;
+
+export type MashambaOwnerCreate = {
+	name: string;
+	email: string;
+	phone: string;
+	location: string;
+	image: string;
+	whatsapp?: string;
+};
+
+export type MashambaOwnerUpdate = {
+	name?: string;
+	email?: string;
+	phone?: string;
+	location?: string;
+	image?: string;
+	whatsapp?: string;
+};
+
+export type MashambaOwnerCollection = {
+	type: 'base';
+	collectionId: 'wbq0qz1adwxte2v';
+	collectionName: 'mashamba_owner';
+	response: MashambaOwnerResponse;
+	create: MashambaOwnerCreate;
+	update: MashambaOwnerUpdate;
+	relations: {
+		'mashamba_listings(owner)': MashambaListingsCollection[];
+	};
+};
+
+// ===== utility_staff =====
+
+export type UtilityStaffResponse = {
+    name: string;
+	type: 'caretaker' | 'manager' | 'cashier';
+	avatar?: string;
+} & AuthCollectionRecord;
+
+export type UtilityStaffCreate = {
+	name: string;
+	type: 'caretaker' | 'manager' | 'cashier';
+	avatar?: string;
+};
+
+export type UtilityStaffUpdate = {
+	name?: string;
+	type?: 'caretaker' | 'manager' | 'cashier';
+	avatar?: string;
+};
+
+export type UtilityStaffCollection = {
+	type: 'auth';
+	collectionId: 'dlvnttlfiw585jv';
+	collectionName: 'utility_staff';
+	response: UtilityStaffResponse;
+	create: UtilityStaffCreate;
+	update: UtilityStaffUpdate;
+	relations: {
+		'tasky_tasks(created_by)': TaskyTasksCollection[];
+        'tasky_tasks(updated_by)': TaskyTasksCollection[];
+        'tasky_tasks(approved_by)': TaskyTasksCollection[];
+        'tasky_tasks(funded_by)': TaskyTasksCollection[];
+        'tasky_tasks(marked_completed_by)': TaskyTasksCollection[];
+        'tasky_tasks(rejected_by)': TaskyTasksCollection[];
+        'tasky_tasks(marked_in_progress_by)': TaskyTasksCollection[];
+        'tasky_staff_details(leave_requested_by)': TaskyStaffDetailsCollection[];
+        'tasky_staff_details(leave_approved_by)': TaskyStaffDetailsCollection[];
+        'pocketbook_notifications(source)': PocketbookNotificationsCollection[];
+	};
+};
+
+// ===== tasky_tasks =====
+
+export type TaskyTasksResponse = {
+    title: string;
+	description: string;
+	type: 'todo' | 'repairs' | 'maintenance' | 'recurring' | 'other';
+	status: 'created' | 'approved' | 'funded' | 'in_progress' | 'completed' | 'rejected';
+	created_by: string;
+	updated_by?: string;
+	approved_by?: string;
+	funded_by?: string;
+	marked_completed_by?: string;
+	approved_on?: string;
+	funded_on?: string;
+	completed_on?: string;
+	quotation?: string;
+	deadline?: string;
+	frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+	rejected_by?: string;
+	marked_in_progress_by?: string;
+	rejected_on?: string;
+	marked_in_progress_on?: string;
+} & BaseCollectionRecord;
+
+export type TaskyTasksCreate = {
+	title: string;
+	description: string;
+	type: 'todo' | 'repairs' | 'maintenance' | 'recurring' | 'other';
+	status: 'created' | 'approved' | 'funded' | 'in_progress' | 'completed' | 'rejected';
+	created_by: string;
+	updated_by?: string;
+	approved_by?: string;
+	funded_by?: string;
+	marked_completed_by?: string;
+	approved_on?: string | Date;
+	funded_on?: string | Date;
+	completed_on?: string | Date;
+	quotation?: string | URL;
+	deadline?: string | Date;
+	frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+	rejected_by?: string;
+	marked_in_progress_by?: string;
+	rejected_on?: string | Date;
+	marked_in_progress_on?: string | Date;
+};
+
+export type TaskyTasksUpdate = {
+	title?: string;
+	description?: string;
+	type?: 'todo' | 'repairs' | 'maintenance' | 'recurring' | 'other';
+	status?: 'created' | 'approved' | 'funded' | 'in_progress' | 'completed' | 'rejected';
+	created_by?: string;
+	updated_by?: string;
+	approved_by?: string;
+	funded_by?: string;
+	marked_completed_by?: string;
+	approved_on?: string | Date;
+	funded_on?: string | Date;
+	completed_on?: string | Date;
+	quotation?: string | URL;
+	deadline?: string | Date;
+	frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+	rejected_by?: string;
+	marked_in_progress_by?: string;
+	rejected_on?: string | Date;
+	marked_in_progress_on?: string | Date;
+};
+
+export type TaskyTasksCollection = {
+	type: 'base';
+	collectionId: 'ipamtot35z4hzln';
+	collectionName: 'tasky_tasks';
+	response: TaskyTasksResponse;
+	create: TaskyTasksCreate;
+	update: TaskyTasksUpdate;
+	relations: {
+		created_by: UtilityStaffCollection;
+        updated_by: UtilityStaffCollection;
+        approved_by: UtilityStaffCollection;
+        funded_by: UtilityStaffCollection;
+        marked_completed_by: UtilityStaffCollection;
+        rejected_by: UtilityStaffCollection;
+        marked_in_progress_by: UtilityStaffCollection;
+	};
+};
+
+// ===== tasky_staff_details =====
+
+export type TaskyStaffDetailsResponse = {
+    leave_type: 'sick' | 'annual' | 'maternity' | 'other';
+	leave_reason: string;
+	leave_start: string;
+	leave_end: string;
+	leave_requested_by: string;
+	leave_approved_by?: string;
+	leave_request_status: 'pending' | 'approved' | 'rejected';
+	remaining_leave_days: number;
+	remaining_sick_leave_days: number;
+	leave_approved_on?: string;
+} & BaseCollectionRecord;
+
+export type TaskyStaffDetailsCreate = {
+	leave_type: 'sick' | 'annual' | 'maternity' | 'other';
+	leave_reason: string;
+	leave_start: string | Date;
+	leave_end: string | Date;
+	leave_requested_by: string;
+	leave_approved_by?: string;
+	leave_request_status: 'pending' | 'approved' | 'rejected';
+	remaining_leave_days: number;
+	remaining_sick_leave_days: number;
+	leave_approved_on?: string | Date;
+};
+
+export type TaskyStaffDetailsUpdate = {
+	leave_type?: 'sick' | 'annual' | 'maternity' | 'other';
+	leave_reason?: string;
+	leave_start?: string | Date;
+	leave_end?: string | Date;
+	leave_requested_by?: string;
+	leave_approved_by?: string;
+	leave_request_status?: 'pending' | 'approved' | 'rejected';
+	remaining_leave_days?: number;
+	'remaining_leave_days+'?: number;
+	'remaining_leave_days-'?: number;
+	remaining_sick_leave_days?: number;
+	'remaining_sick_leave_days+'?: number;
+	'remaining_sick_leave_days-'?: number;
+	leave_approved_on?: string | Date;
+};
+
+export type TaskyStaffDetailsCollection = {
+	type: 'base';
+	collectionId: 'm1ibf55enmz09s6';
+	collectionName: 'tasky_staff_details';
+	response: TaskyStaffDetailsResponse;
+	create: TaskyStaffDetailsCreate;
+	update: TaskyStaffDetailsUpdate;
+	relations: {
+		leave_requested_by: UtilityStaffCollection;
+        leave_approved_by: UtilityStaffCollection;
+	};
+};
+
+// ===== pocketbook_notifications =====
+
+export type PocketbookNotificationsResponse = {
+    name: string;
+	details: string;
+	source?: string;
+	item_id?: string;
+	type: string;
+} & BaseCollectionRecord;
+
+export type PocketbookNotificationsCreate = {
+	name: string;
+	details: string;
+	source?: string;
+	item_id?: string;
+	type: string;
+};
+
+export type PocketbookNotificationsUpdate = {
+	name?: string;
+	details?: string;
+	source?: string;
+	item_id?: string;
+	type?: string;
+};
+
+export type PocketbookNotificationsCollection = {
+	type: 'base';
+	collectionId: 'q2inux1nn05ynut';
+	collectionName: 'pocketbook_notifications';
+	response: PocketbookNotificationsResponse;
+	create: PocketbookNotificationsCreate;
+	update: PocketbookNotificationsUpdate;
+	relations: {
+		source: UtilityStaffCollection;
+	};
+};
+
+// ===== utility_shops =====
+
+export type UtilityShopsResponse = {
+    tenant: string;
+	shop_number: string;
+	supa_tenant?: string;
+	utils?: 'elec' | 'water' | 'both';
+	order?: number;
+	supa_id?: string;
+	is_vacant?: boolean;
+} & BaseCollectionRecord;
+
+export type UtilityShopsCreate = {
+	tenant: string;
+	shop_number: string;
+	supa_tenant?: string;
+	utils?: 'elec' | 'water' | 'both';
+	order?: number;
+	supa_id?: string;
+	is_vacant?: boolean;
+};
+
+export type UtilityShopsUpdate = {
+	tenant?: string;
+	shop_number?: string;
+	supa_tenant?: string;
+	utils?: 'elec' | 'water' | 'both';
+	order?: number;
+	'order+'?: number;
+	'order-'?: number;
+	supa_id?: string;
+	is_vacant?: boolean;
+};
+
+export type UtilityShopsCollection = {
+	type: 'base';
+	collectionId: 'zb1etrv0i3olw5p';
+	collectionName: 'utility_shops';
+	response: UtilityShopsResponse;
+	create: UtilityShopsCreate;
+	update: UtilityShopsUpdate;
+	relations: {
+		tenant: UtilityTenantsCollection;
+        'utility_bills(shop)': UtilityBillsCollection[];
+	};
+};
+
+// ===== utility_tenants =====
+
+export type UtilityTenantsResponse = {
+    name: string;
+	contact?: string;
+	email?: string;
+	details?: string;
+	supa_id?: string;
+} & BaseCollectionRecord;
+
+export type UtilityTenantsCreate = {
+	name: string;
+	contact?: string;
+	email?: string;
+	details?: string;
+	supa_id?: string;
+};
+
+export type UtilityTenantsUpdate = {
+	name?: string;
+	contact?: string;
+	email?: string;
+	details?: string;
+	supa_id?: string;
+};
+
+export type UtilityTenantsCollection = {
+	type: 'base';
+	collectionId: '6ur1ivky21zygnv';
+	collectionName: 'utility_tenants';
+	response: UtilityTenantsResponse;
+	create: UtilityTenantsCreate;
+	update: UtilityTenantsUpdate;
+	relations: {
+		'utility_shops(tenant)': UtilityShopsCollection[];
+	};
+};
+
+// ===== utility_bills =====
+
+export type UtilityBillsResponse = {
+    shop: string;
+	elec_readings?: number;
+	water_readings?: number;
+	month: number;
+	year: number;
+} & BaseCollectionRecord;
+
+export type UtilityBillsCreate = {
+	shop: string;
+	elec_readings?: number;
+	water_readings?: number;
+	month: number;
+	year: number;
+};
+
+export type UtilityBillsUpdate = {
+	shop?: string;
+	elec_readings?: number;
+	'elec_readings+'?: number;
+	'elec_readings-'?: number;
+	water_readings?: number;
+	'water_readings+'?: number;
+	'water_readings-'?: number;
+	month?: number;
+	'month+'?: number;
+	'month-'?: number;
+	year?: number;
+	'year+'?: number;
+	'year-'?: number;
+};
+
+export type UtilityBillsCollection = {
+	type: 'base';
+	collectionId: 'cvtakohtxaagiat';
+	collectionName: 'utility_bills';
+	response: UtilityBillsResponse;
+	create: UtilityBillsCreate;
+	update: UtilityBillsUpdate;
+	relations: {
+		shop: UtilityShopsCollection;
+	};
+};
+
+// ===== pocketbook_posts =====
+
+export type PocketbookPostsResponse = {
+    body?: string;
+	media?: string;
+	user: string;
+	parent?: string;
+	depth?: number;
+} & BaseCollectionRecord;
+
+export type PocketbookPostsCreate = {
+	body?: string;
+	media?: string;
+	user: string;
+	parent?: string;
+	depth?: number;
+};
+
+export type PocketbookPostsUpdate = {
+	body?: string;
+	media?: string;
+	user?: string;
+	parent?: string;
+	depth?: number;
+	'depth+'?: number;
+	'depth-'?: number;
+};
+
+export type PocketbookPostsCollection = {
+	type: 'base';
+	collectionId: 'vbse1l0qet8z4hu';
+	collectionName: 'pocketbook_posts';
+	response: PocketbookPostsResponse;
+	create: PocketbookPostsCreate;
+	update: PocketbookPostsUpdate;
+	relations: {
+		'pocketbook_reactions(post)': PocketbookReactionsCollection[];
+        user: PocketbookUserCollection;
+        parent: PocketbookPostsCollection;
+        'pocketbook_posts(parent)': PocketbookPostsCollection[];
+	};
+};
+
+// ===== social_user_1 =====
+
+export type SocialUser_1Response = {
     github_username?: string;
 	linkedin_username?: string;
 	country?: string;
 	city?: string;
 	phone?: string;
-	skills?: string;
-	last_resume_on?: string;
-	last_letter_on?: string;
 	langauges?: string;
 	avatar?: string;
-	avatar_url?: string;
 	about_me?: string;
 	github_access_token?: string;
+	keys?: any;
 } & AuthCollectionRecord;
 
-export type SherpaUserCreate = {
+export type SocialUser_1Create = {
 	github_username?: string;
 	linkedin_username?: string;
 	country?: string;
 	city?: string;
 	phone?: string;
-	skills?: string;
-	last_resume_on?: string | Date;
-	last_letter_on?: string | Date;
 	langauges?: string;
 	avatar?: string;
-	avatar_url?: string | URL;
 	about_me?: string;
 	github_access_token?: string;
+	keys?: any;
 };
 
-export type SherpaUserUpdate = {
+export type SocialUser_1Update = {
 	github_username?: string;
 	linkedin_username?: string;
 	country?: string;
 	city?: string;
 	phone?: string;
-	skills?: string;
-	last_resume_on?: string | Date;
-	last_letter_on?: string | Date;
 	langauges?: string;
 	avatar?: string;
-	avatar_url?: string | URL;
 	about_me?: string;
 	github_access_token?: string;
+	keys?: any;
 };
 
-export type SherpaUserCollection = {
+export type SocialUser_1Collection = {
 	type: 'auth';
-	collectionId: 'rk2hpsmgen3ohg8';
-	collectionName: 'sherpa_user';
-	response: SherpaUserResponse;
-	create: SherpaUserCreate;
-	update: SherpaUserUpdate;
-	relations: {
-		'sherpa_projects(user)': SherpaProjectsCollection[];
-        'sherpa_education(user)': SherpaEducationCollection[];
-        'sherpa_experience(user)': SherpaExperienceCollection[];
-        'sherpa_content(user)': SherpaContentCollection[];
-        'sherpa_hackathon(user)': SherpaHackathonCollection[];
-        'sherpa_internship(user)': SherpaInternshipCollection[];
-        'sherpa_job_application(user)': SherpaJobApplicationCollection[];
-        'sherpa_resume(user)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_projects =====
-
-export type SherpaProjectsResponse = {
-    name: string;
-	description: string;
-	repo_url: string;
-	image_url?: string;
-	languages?: string;
-	libraries?: string;
-	image?: string;
-	user: string;
-} & BaseCollectionRecord;
-
-export type SherpaProjectsCreate = {
-	name: string;
-	description: string;
-	repo_url: string | URL;
-	image_url?: string | URL;
-	languages?: string;
-	libraries?: string;
-	image?: string;
-	user: string;
-};
-
-export type SherpaProjectsUpdate = {
-	name?: string;
-	description?: string;
-	repo_url?: string | URL;
-	image_url?: string | URL;
-	languages?: string;
-	libraries?: string;
-	image?: string;
-	user?: string;
-};
-
-export type SherpaProjectsCollection = {
-	type: 'base';
-	collectionId: 's5o7w1pgfdcqm6f';
-	collectionName: 'sherpa_projects';
-	response: SherpaProjectsResponse;
-	create: SherpaProjectsCreate;
-	update: SherpaProjectsUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(project)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_education =====
-
-export type SherpaEducationResponse = {
-    school: string;
-	qualification: 'Certificate' | 'Bachelors' | 'Masters' | 'Ph';
-	field: string;
-	from: string;
-	to: string;
-	user: string;
-} & BaseCollectionRecord;
-
-export type SherpaEducationCreate = {
-	school: string;
-	qualification: 'Certificate' | 'Bachelors' | 'Masters' | 'Ph';
-	field: string;
-	from: string | Date;
-	to: string | Date;
-	user: string;
-};
-
-export type SherpaEducationUpdate = {
-	school?: string;
-	qualification?: 'Certificate' | 'Bachelors' | 'Masters' | 'Ph';
-	field?: string;
-	from?: string | Date;
-	to?: string | Date;
-	user?: string;
-};
-
-export type SherpaEducationCollection = {
-	type: 'base';
-	collectionId: 'pxcw0ing5irbeln';
-	collectionName: 'sherpa_education';
-	response: SherpaEducationResponse;
-	create: SherpaEducationCreate;
-	update: SherpaEducationUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(education)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_experience =====
-
-export type SherpaExperienceResponse = {
-    position: string;
-	company: string;
-	description: string;
-	user: string;
-	from: string;
-	to: string;
-} & BaseCollectionRecord;
-
-export type SherpaExperienceCreate = {
-	position: string;
-	company: string;
-	description: string;
-	user: string;
-	from: string | Date;
-	to: string | Date;
-};
-
-export type SherpaExperienceUpdate = {
-	position?: string;
-	company?: string;
-	description?: string;
-	user?: string;
-	from?: string | Date;
-	to?: string | Date;
-};
-
-export type SherpaExperienceCollection = {
-	type: 'base';
-	collectionId: 'p2jghljn8ui4yb1';
-	collectionName: 'sherpa_experience';
-	response: SherpaExperienceResponse;
-	create: SherpaExperienceCreate;
-	update: SherpaExperienceUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(experience)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_content =====
-
-export type SherpaContentResponse = {
-    title: string;
-	type?: 'Video' | 'Blog' | 'Gist' | 'Podcast';
-	description: string;
-	content_url: string;
-	user: string;
-} & BaseCollectionRecord;
-
-export type SherpaContentCreate = {
-	title: string;
-	type?: 'Video' | 'Blog' | 'Gist' | 'Podcast';
-	description: string;
-	content_url: string | URL;
-	user: string;
-};
-
-export type SherpaContentUpdate = {
-	title?: string;
-	type?: 'Video' | 'Blog' | 'Gist' | 'Podcast';
-	description?: string;
-	content_url?: string | URL;
-	user?: string;
-};
-
-export type SherpaContentCollection = {
-	type: 'base';
-	collectionId: 'c9iduxiox7kxnvk';
-	collectionName: 'sherpa_content';
-	response: SherpaContentResponse;
-	create: SherpaContentCreate;
-	update: SherpaContentUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(content)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_hackathon =====
-
-export type SherpaHackathonResponse = {
-    name: string;
-	description: string;
-	technologies: string;
-	from: string;
-	to: string;
-	link: string;
-	user: string;
-} & BaseCollectionRecord;
-
-export type SherpaHackathonCreate = {
-	name: string;
-	description: string;
-	technologies: string;
-	from: string | Date;
-	to: string | Date;
-	link: string | URL;
-	user: string;
-};
-
-export type SherpaHackathonUpdate = {
-	name?: string;
-	description?: string;
-	technologies?: string;
-	from?: string | Date;
-	to?: string | Date;
-	link?: string | URL;
-	user?: string;
-};
-
-export type SherpaHackathonCollection = {
-	type: 'base';
-	collectionId: '8fxbokb9tx7tb31';
-	collectionName: 'sherpa_hackathon';
-	response: SherpaHackathonResponse;
-	create: SherpaHackathonCreate;
-	update: SherpaHackathonUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(hackathon)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_internship =====
-
-export type SherpaInternshipResponse = {
-    description: string;
-	role: string;
-	company: string;
-	from: string;
-	to: string;
-	user: string;
-} & BaseCollectionRecord;
-
-export type SherpaInternshipCreate = {
-	description: string;
-	role: string;
-	company: string;
-	from: string | Date;
-	to: string | Date;
-	user: string;
-};
-
-export type SherpaInternshipUpdate = {
-	description?: string;
-	role?: string;
-	company?: string;
-	from?: string | Date;
-	to?: string | Date;
-	user?: string;
-};
-
-export type SherpaInternshipCollection = {
-	type: 'base';
-	collectionId: '1drmbc5pextvec1';
-	collectionName: 'sherpa_internship';
-	response: SherpaInternshipResponse;
-	create: SherpaInternshipCreate;
-	update: SherpaInternshipUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(internship)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_job_application =====
-
-export type SherpaJobApplicationResponse = {
-    title: string;
-	description: string;
-	posting_url: string;
-	cover_letter?: string;
-	resume?: string;
-	user: string;
-} & BaseCollectionRecord;
-
-export type SherpaJobApplicationCreate = {
-	title: string;
-	description: string;
-	posting_url: string | URL;
-	cover_letter?: string;
-	resume?: string;
-	user: string;
-};
-
-export type SherpaJobApplicationUpdate = {
-	title?: string;
-	description?: string;
-	posting_url?: string | URL;
-	cover_letter?: string;
-	resume?: string;
-	user?: string;
-};
-
-export type SherpaJobApplicationCollection = {
-	type: 'base';
-	collectionId: 'qw5z9dkd7443bfw';
-	collectionName: 'sherpa_job_application';
-	response: SherpaJobApplicationResponse;
-	create: SherpaJobApplicationCreate;
-	update: SherpaJobApplicationUpdate;
-	relations: {
-		user: SherpaUserCollection;
-        'sherpa_resume(job_application)': SherpaResumeCollection[];
-	};
-};
-
-// ===== sherpa_resume =====
-
-export type SherpaResumeResponse = {
-    project?: string;
-	internship?: string;
-	education?: string;
-	hackathon?: string;
-	content?: string;
-	experience?: string;
-	job_application?: string;
-	user: string;
-	body?: string;
-} & BaseCollectionRecord;
-
-export type SherpaResumeCreate = {
-	project?: string;
-	internship?: string;
-	education?: string;
-	hackathon?: string;
-	content?: string;
-	experience?: string;
-	job_application?: string;
-	user: string;
-	body?: string;
-};
-
-export type SherpaResumeUpdate = {
-	project?: string;
-	internship?: string;
-	education?: string;
-	hackathon?: string;
-	content?: string;
-	experience?: string;
-	job_application?: string;
-	user?: string;
-	body?: string;
-};
-
-export type SherpaResumeCollection = {
-	type: 'base';
-	collectionId: 'a4fxdhn0qbp2edh';
-	collectionName: 'sherpa_resume';
-	response: SherpaResumeResponse;
-	create: SherpaResumeCreate;
-	update: SherpaResumeUpdate;
-	relations: {
-		project: SherpaProjectsCollection;
-        internship: SherpaInternshipCollection;
-        education: SherpaEducationCollection;
-        hackathon: SherpaHackathonCollection;
-        content: SherpaContentCollection;
-        experience: SherpaExperienceCollection;
-        job_application: SherpaJobApplicationCollection;
-        user: SherpaUserCollection;
-	};
-};
-
-// ===== scribble_posts =====
-
-export type ScribblePostsResponse = {
-    title?: string;
-	content?: string;
-	contentMarkdown?: string;
-	user_id?: string;
-	status?: 'DRAFT' | 'SCHEDULED' | 'PUBLISHED';
-	tags?: any;
-	publishingDetails?: any;
-	devToArticleCoverImagePath?: string;
-	devToArticleId?: string;
-	devToBlogUrl?: string;
-	hashNodeArticleCoverImagePath?: string;
-	hashNodeArticleId?: string;
-	hashNodeBlogUrl?: string;
-	last_published_at?: string;
-	mediumArticleId?: string;
-	mediumBlogUrl?: string;
-	post_media?: Array<string>;
-} & BaseCollectionRecord;
-
-export type ScribblePostsCreate = {
-	title?: string;
-	content?: string;
-	contentMarkdown?: string;
-	user_id?: string;
-	status?: 'DRAFT' | 'SCHEDULED' | 'PUBLISHED';
-	tags?: any;
-	publishingDetails?: any;
-	devToArticleCoverImagePath?: string | URL;
-	devToArticleId?: string;
-	devToBlogUrl?: string | URL;
-	hashNodeArticleCoverImagePath?: string | URL;
-	hashNodeArticleId?: string;
-	hashNodeBlogUrl?: string | URL;
-	last_published_at?: string | Date;
-	mediumArticleId?: string;
-	mediumBlogUrl?: string | URL;
-	post_media?: MaybeArray<string>;
-};
-
-export type ScribblePostsUpdate = {
-	title?: string;
-	content?: string;
-	contentMarkdown?: string;
-	user_id?: string;
-	status?: 'DRAFT' | 'SCHEDULED' | 'PUBLISHED';
-	tags?: any;
-	publishingDetails?: any;
-	devToArticleCoverImagePath?: string | URL;
-	devToArticleId?: string;
-	devToBlogUrl?: string | URL;
-	hashNodeArticleCoverImagePath?: string | URL;
-	hashNodeArticleId?: string;
-	hashNodeBlogUrl?: string | URL;
-	last_published_at?: string | Date;
-	mediumArticleId?: string;
-	mediumBlogUrl?: string | URL;
-	post_media?: MaybeArray<string>;
-	'post_media-'?: MaybeArray<string>;
-};
-
-export type ScribblePostsCollection = {
-	type: 'base';
-	collectionId: '6itgi5d0trmi1yb';
-	collectionName: 'scribble_posts';
-	response: ScribblePostsResponse;
-	create: ScribblePostsCreate;
-	update: ScribblePostsUpdate;
+	collectionId: 'xm053rsmx3et3qm';
+	collectionName: 'social_user_1';
+	response: SocialUser_1Response;
+	create: SocialUser_1Create;
+	update: SocialUser_1Update;
 	relations: {};
 };
 
-// ===== scribble_user =====
+// ===== pocketbook_friends =====
 
-export type ScribbleUserResponse = {
-    github_username?: string;
-	linkedin_username?: string;
-	country?: string;
-	city?: string;
-	phone?: string;
-	langauges?: string;
-	avatar?: string;
-	about_me?: string;
-	github_access_token?: string;
-} & AuthCollectionRecord;
-
-export type ScribbleUserCreate = {
-	github_username?: string;
-	linkedin_username?: string;
-	country?: string;
-	city?: string;
-	phone?: string;
-	langauges?: string;
-	avatar?: string;
-	about_me?: string;
-	github_access_token?: string;
-};
-
-export type ScribbleUserUpdate = {
-	github_username?: string;
-	linkedin_username?: string;
-	country?: string;
-	city?: string;
-	phone?: string;
-	langauges?: string;
-	avatar?: string;
-	about_me?: string;
-	github_access_token?: string;
-};
-
-export type ScribbleUserCollection = {
-	type: 'auth';
-	collectionId: '51hjtt652zdrck6';
-	collectionName: 'scribble_user';
-	response: ScribbleUserResponse;
-	create: ScribbleUserCreate;
-	update: ScribbleUserUpdate;
-	relations: {};
-};
-
-// ===== scribble_providers =====
-
-export type ScribbleProvidersResponse = {
-    token?: string;
-	name?: 'devto' | 'mediaum' | 'hashnode';
-	other?: any;
+export type PocketbookFriendsResponse = {
+    user_a?: string;
+	user_b?: string;
+	user_a_follow_user_b?: 'yes' | 'no';
+	user_b_follow_user_a?: 'yes' | 'no';
 } & BaseCollectionRecord;
 
-export type ScribbleProvidersCreate = {
-	token?: string;
-	name?: 'devto' | 'mediaum' | 'hashnode';
-	other?: any;
+export type PocketbookFriendsCreate = {
+	user_a?: string;
+	user_b?: string;
+	user_a_follow_user_b?: 'yes' | 'no';
+	user_b_follow_user_a?: 'yes' | 'no';
 };
 
-export type ScribbleProvidersUpdate = {
-	token?: string;
-	name?: 'devto' | 'mediaum' | 'hashnode';
-	other?: any;
+export type PocketbookFriendsUpdate = {
+	user_a?: string;
+	user_b?: string;
+	user_a_follow_user_b?: 'yes' | 'no';
+	user_b_follow_user_a?: 'yes' | 'no';
 };
 
-export type ScribbleProvidersCollection = {
+export type PocketbookFriendsCollection = {
 	type: 'base';
-	collectionId: 'hcmninkr66kpow4';
-	collectionName: 'scribble_providers';
-	response: ScribbleProvidersResponse;
-	create: ScribbleProvidersCreate;
-	update: ScribbleProvidersUpdate;
-	relations: {};
+	collectionId: 'rjrl9uzeu508rf3';
+	collectionName: 'pocketbook_friends';
+	response: PocketbookFriendsResponse;
+	create: PocketbookFriendsCreate;
+	update: PocketbookFriendsUpdate;
+	relations: {
+		user_a: PocketbookUserCollection;
+        user_b: PocketbookUserCollection;
+	};
 };
 
 // ===== Schema =====
 
 export type Schema = {
-	sherpa_user: SherpaUserCollection;
-	sherpa_projects: SherpaProjectsCollection;
-	sherpa_education: SherpaEducationCollection;
-	sherpa_experience: SherpaExperienceCollection;
-	sherpa_content: SherpaContentCollection;
-	sherpa_hackathon: SherpaHackathonCollection;
-	sherpa_internship: SherpaInternshipCollection;
-	sherpa_job_application: SherpaJobApplicationCollection;
-	sherpa_resume: SherpaResumeCollection;
-	scribble_posts: ScribblePostsCollection;
-	scribble_user: ScribbleUserCollection;
-	scribble_providers: ScribbleProvidersCollection;
+	pocketbook_user: PocketbookUserCollection;
+	pocketbook_reactions: PocketbookReactionsCollection;
+	mashamba_listings: MashambaListingsCollection;
+	mashamba_owner: MashambaOwnerCollection;
+	utility_staff: UtilityStaffCollection;
+	tasky_tasks: TaskyTasksCollection;
+	tasky_staff_details: TaskyStaffDetailsCollection;
+	pocketbook_notifications: PocketbookNotificationsCollection;
+	utility_shops: UtilityShopsCollection;
+	utility_tenants: UtilityTenantsCollection;
+	utility_bills: UtilityBillsCollection;
+	pocketbook_posts: PocketbookPostsCollection;
+	social_user_1: SocialUser_1Collection;
+	pocketbook_friends: PocketbookFriendsCollection;
 };

@@ -1,0 +1,18 @@
+meta {
+  name: one_custom_bills
+  type: http
+  seq: 9
+}
+
+get {
+  url: http://127.0.0.1:8090/custom_utility_bills?curr_year=2023&prev_year=2023&curr_month=10&prev_month=6
+  body: none
+  auth: none
+}
+
+query {
+  curr_year: 2023
+  prev_year: 2023
+  curr_month: 10
+  prev_month: 6
+}
