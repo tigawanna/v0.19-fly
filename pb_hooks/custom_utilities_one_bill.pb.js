@@ -46,7 +46,7 @@ IFNULL(curr.id,"blank") as curr_bill_id,
 IFNULL(prev.id,"blank") as prev_bill_id,
 
 sh.shop_number as shop_number,
-te.name as shop_name,
+te.username as shop_name,
 sh."order" as list_order,
 
 IFNULL(curr.month,0) as curr_month,

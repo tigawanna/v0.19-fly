@@ -76,9 +76,9 @@ LIMIT {:limit}
         })
         ?.all(result); // throw an error on db failure
 
-      if (result.length > 0) {
-        console.log(result[0]);
-      }
+      // if (result.length > 0) {
+      //   console.log(result[0]);
+      // }
 
       return c.json(200, { result });
     } catch (e) {

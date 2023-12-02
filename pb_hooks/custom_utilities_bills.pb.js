@@ -43,7 +43,7 @@ IFNULL(curr.id,"blank") as curr_bill_id,
 IFNULL(prev.id,"blank") as prev_bill_id,
 
 sh.shop_number as shop_number,
-te.name as shop_name,
+te.username as shop_name,
 sh."order" as list_order,
 
 IFNULL(curr.month,0) as curr_month,
@@ -80,9 +80,9 @@ ORDER BY sh."order";
         })
         ?.all(result); // throw an error on db failure
 
-      if (result.length > 0) {
-        console.log(result[0]);
-      }
+      // if (result.length > 0) {
+      //   console.log(result[0]);
+      // }
 
       return c.json(200, { result });
     } catch (e) {
