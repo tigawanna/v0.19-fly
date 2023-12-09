@@ -3,7 +3,7 @@ routerAdd(
   "GET",
   "/custom_pocketbook_notifications_count",
   (c) => {
-    console.log("custom_pocketbook_notifications_count === ", c.queryParam("created"));
+    // console.log("custom_pocketbook_notifications_count === ", c.queryParam("created"));
     try {
       const result = new DynamicModel({
         count: 0,

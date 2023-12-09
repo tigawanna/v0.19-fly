@@ -68,8 +68,8 @@ LIMIT {:limit}
         ?.bind({
           user: c.queryParam("user"),
           id: c.queryParam("id"),
-          depth: c.queryParam("depth"),
-          profile: c.queryParam("profile"),
+          depth: isParamEmpty(c.queryParam("depth"), 0),
+          profile: isParamEmpty(c.queryParam("profile"), "general"),
           created: isParamEmpty(c.queryParam("created"), new Date().toISOString()),
           limit: isParamEmpty(c.queryParam("limit"), 5),
         })
