@@ -13,9 +13,16 @@ if(param === "" || param === undefined || param === null){
 }
   return param
 }
+      if (isParamEmpty(c.queryParam("id"),"")==="") {
+        return c.json(400, { message: "id parameter required" });
+      }
+      if (isParamEmpty(c.queryParam("logged_in"),"")==="") {
+        return c.json(400, { message: "logged_in parameter required" });
+      }
 const result = arrayOf(
 new DynamicModel({
   friendship_id: "",
+
   created: "",
   updated: "",
   user_a: "",

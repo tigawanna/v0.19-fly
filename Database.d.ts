@@ -67,6 +67,8 @@ export type PocketbookUserCollection = {
         'pocketbook_posts(user)': PocketbookPostsCollection[];
         'pocketbook_friends(user_a)': PocketbookFriendsCollection[];
         'pocketbook_friends(user_b)': PocketbookFriendsCollection[];
+        'pocketbook_friendship(user_a)': PocketbookFriendshipCollection[];
+        'pocketbook_friendship(user_b)': PocketbookFriendshipCollection[];
 	};
 };
 
@@ -428,34 +430,28 @@ export type PocketbookNotificationsCollection = {
 
 export type UtilityShopsResponse = {
     shop_number: string;
-	supa_tenant?: string;
-	utils?: 'elec' | 'water' | 'both';
-	order?: number;
-	supa_id?: string;
-	is_vacant?: boolean;
 	tenant?: string;
+	utils?: 'elec' | 'water' | 'both' | 'none';
+	order?: number;
+	is_vacant?: boolean;
 } & BaseCollectionRecord;
 
 export type UtilityShopsCreate = {
 	shop_number: string;
-	supa_tenant?: string;
-	utils?: 'elec' | 'water' | 'both';
-	order?: number;
-	supa_id?: string;
-	is_vacant?: boolean;
 	tenant?: string;
+	utils?: 'elec' | 'water' | 'both' | 'none';
+	order?: number;
+	is_vacant?: boolean;
 };
 
 export type UtilityShopsUpdate = {
 	shop_number?: string;
-	supa_tenant?: string;
-	utils?: 'elec' | 'water' | 'both';
+	tenant?: string;
+	utils?: 'elec' | 'water' | 'both' | 'none';
 	order?: number;
 	'order+'?: number;
 	'order-'?: number;
-	supa_id?: string;
 	is_vacant?: boolean;
-	tenant?: string;
 };
 
 export type UtilityShopsCollection = {
@@ -661,6 +657,30 @@ export type UtilityTenantsCollection = {
 	};
 };
 
+// ===== pocketbook_friendship =====
+
+export type PocketbookFriendshipResponse = {
+    user_a?: string;
+	user_b?: string;
+	user_a_name?: string;
+	user_b_name?: string;
+	user_a_avatar?: string;
+	user_b_avatar?: string;
+	user_a_email?: string;
+	user_b_email?: string;
+} & ViewCollectionRecord;
+
+export type PocketbookFriendshipCollection = {
+	type: 'view';
+	collectionId: 'wiu3lrsh66aclxe';
+	collectionName: 'pocketbook_friendship';
+	response: PocketbookFriendshipResponse;
+	relations: {
+		user_a: PocketbookUserCollection;
+        user_b: PocketbookUserCollection;
+	};
+};
+
 // ===== Schema =====
 
 export type Schema = {
@@ -678,4 +698,5 @@ export type Schema = {
 	pocketbook_posts: PocketbookPostsCollection;
 	pocketbook_friends: PocketbookFriendsCollection;
 	utility_tenants: UtilityTenantsCollection;
+	pocketbook_friendship: PocketbookFriendshipCollection;
 };
