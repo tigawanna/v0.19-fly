@@ -12,7 +12,12 @@
     ub.avatar user_b_avatar,
     ua.email user_a_email,
     ub.email user_b_email
-    FROM pocketbook_friends as fr
+FROM pocketbook_friends as fr 
 left JOIN pocketbook_user as ua on ua.id = fr.user_a
 left JOIN pocketbook_user as ub on ub.id = fr.user_b
-LIMIT 12;
+where (
+    (fr.user_a = '1zq7mwdrk2fys4h' and fr.user_b_follow_user_a='yes')
+    OR
+    (fr.user_b = '1zq7mwdrk2fys4h' and fr.user_a_follow_user_b='yes')
+)
+

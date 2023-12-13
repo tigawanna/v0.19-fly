@@ -2,49 +2,47 @@
 /// <reference path="../pb_data/types.d.ts" />
 routerAdd(
   "GET",
-  "/custom_pocketbook_friends",
+  "/custom_pocketbook_following",
   (c) => {
     try {
-
-
-function isParamEmpty(param,default_value){
-if(param === "" || param === undefined || param === null){
-  return default_value
-}
-  return param
-}
-      if (isParamEmpty(c.queryParam("id"),"")==="") {
-        return c.json(400, { message: "id parameter required" });
+      function isParamEmpty(param, default_value) {
+        if (param === "" || param === undefined || param === null) {
+          return default_value;
+        }
+        return param;
       }
-      if (isParamEmpty(c.queryParam("logged_in"),"")==="") {
+      if (isParamEmpty(c.queryParam("profile_id"), "") === "") {
+        return c.json(400, { message: "profile_id parameter required" });
+      }
+      if (isParamEmpty(c.queryParam("logged_in"), "") === "") {
         return c.json(400, { message: "logged_in parameter required" });
       }
-const result = arrayOf(
-new DynamicModel({
-  friendship_id: "",
+      const result = arrayOf(
+        new DynamicModel({
+          friendship_id: "",
 
-  created: "",
-  updated: "",
-  user_a: "",
-  user_b: "",
-  user_a_follow_user_b: "",
-  user_b_follow_user_a: "",
-  following_me: "",
-  followed_by_me: "",
-  user_a_name: "",
-  user_b_name: "",
-  user_a_avatar: "",
-  user_b_avatar: "",
-  user_a_email: "",
-  user_b_email: "",
-})
+          created: "",
+          updated: "",
+          user_a: "",
+          user_b: "",
+          user_a_follow_user_b: "",
+          user_b_follow_user_a: "",
+          following_me: "",
+          followed_by_me: "",
+          user_a_name: "",
+          user_b_name: "",
+          user_a_avatar: "",
+          user_b_avatar: "",
+          user_a_email: "",
+          user_b_email: "",
+        })
       );
 
-  $app
-    ?.dao()
-    ?.db()
-    ?.newQuery(
-      `
+      $app
+        ?.dao()
+        ?.db()
+        ?.newQuery(
+          `
     SELECT 
     fr.id friendship_id,
     fr.created created,
@@ -86,19 +84,27 @@ new DynamicModel({
 FROM pocketbook_friends as fr
 left JOIN pocketbook_user as ua on ua.id = fr.user_a
 left JOIN pocketbook_user as ub on ub.id = fr.user_b
-WHERE (fr.created < {:created} OR (fr.created = {:created} AND fr.id < {:id})) 
+WHERE (
+  (fr.user_a = {:profile_id} AND fr.user_a_follow_user_b='yes')
+  OR
+  (fr.user_b = {:profile_id} AND fr.user_b_follow_user_a='yes')
+)
+AND 
+(
+  fr.created < {:created} OR (fr.created = {:created} AND fr.id < {:last_id})
+)
 ORDER BY fr.created DESC, fr.id DESC
-
 LIMIT {:limit}
       `
-    )
-    ?.bind({
-      logged_in: c.queryParam("logged_in"),
-      id: c.queryParam("id"),
-      created: isParamEmpty(c.queryParam("created"), new Date().toISOString()),
-      limit: isParamEmpty(c.queryParam("limit"), 5),
-    })
-    ?.all(result); // throw an error on db failure
+        )
+        ?.bind({
+          logged_in: c.queryParam("logged_in"),
+          last_id: c.queryParam("last_id"),
+          profile_id: c.queryParam("profile_id"),
+          created: isParamEmpty(c.queryParam("created"), new Date().toISOString()),
+          limit: isParamEmpty(c.queryParam("limit"), 5),
+        })
+        ?.all(result); // throw an error on db failure
 
       // if (result.length > 0) {
       //   console.log(result[0]);
