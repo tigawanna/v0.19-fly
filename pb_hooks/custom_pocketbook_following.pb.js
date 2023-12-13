@@ -29,6 +29,7 @@ routerAdd(
           user_b_follow_user_a: "",
           following_me: "",
           followed_by_me: "",
+          friendship_exists: "",
           user_a_name: "",
           user_b_name: "",
           user_a_avatar: "",
@@ -57,29 +58,37 @@ routerAdd(
     ub.email user_b_email,
     fr.user_a_follow_user_b user_a_follow_user_b,
     fr.user_b_follow_user_a user_b_follow_user_a,
-    IFNULL(
-    (SELECT id FROM pocketbook_friends 
-    WHERE 
-   ((user_a = {:logged_in} 
-		AND 
-	(user_b = fr.user_a or user_b = fr.user_b)) and user_b_follow_user_a = "yes") 
-    or
-    ((user_b = {:logged_in} 
-		AND
-	(user_a = fr.user_a or user_a = fr.user_b)) and user_a_follow_user_b = "yes" )
-    ),'no') as following_me,
 
-    IFNULL(
-    (SELECT id FROM pocketbook_friends 
-    WHERE 
-   ((user_a = {:logged_in} 
-		AND
-	(user_b = fr.user_a or user_b = fr.user_b)) and user_a_follow_user_b = "yes") 
-    or
-    ((user_b = {:logged_in} 
-		AND
-	 (user_a = fr.user_a or user_a = fr.user_b)) and user_b_follow_user_a = "yes" )
-    ),'no') as followed_by_me
+
+  CASE WHEN EXISTS (
+    SELECT id
+    FROM pocketbook_friends
+    WHERE id=fr.id AND
+    ((user_a = {:logged_in}) 
+    OR 
+    (user_b = {:logged_in}))
+  ) THEN 'yes' ELSE 'no' END AS friendship_exists,
+
+  CASE WHEN EXISTS (
+    SELECT id
+    FROM pocketbook_friends
+    WHERE id=fr.id AND
+    ((user_a = {:logged_in} AND user_b_follow_user_a = 'yes') 
+    OR 
+    (user_b = {:logged_in} AND user_a_follow_user_b = 'yes'))
+  ) THEN 'yes' ELSE 'no' END AS following_me,
+
+  CASE WHEN EXISTS (
+    SELECT id
+    FROM pocketbook_friends
+    WHERE id=fr.id AND
+   (
+    (user_a = {:profile_id} AND user_a_follow_user_b = 'yes')
+     OR
+     (user_b = {:profile_id} AND user_b_follow_user_a = 'yes')
+     )
+  ) THEN 'yes' ELSE 'no' END AS followed_by_me
+
 
 FROM pocketbook_friends as fr
 left JOIN pocketbook_user as ua on ua.id = fr.user_a

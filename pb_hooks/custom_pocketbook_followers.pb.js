@@ -29,6 +29,7 @@ routerAdd(
           user_b_follow_user_a: "",
           following_me: "",
           followed_by_me: "",
+          friendship_exists: "",
           user_a_name: "",
           user_b_name: "",
           user_a_avatar: "",
@@ -43,55 +44,63 @@ routerAdd(
         ?.db()
         ?.newQuery(
           `
-    SELECT 
-    fr.id friendship_id,
-    fr.created created,
-    fr.updated updated,
-    fr.user_a user_a,
-    fr.user_b user_b,
-    ua.username user_a_name,
-    ub.username user_b_name,
-    ua.avatar user_a_avatar,
-    ub.avatar user_b_avatar,
-    ua.email user_a_email,
-    ub.email user_b_email,
-    fr.user_a_follow_user_b user_a_follow_user_b,
-    fr.user_b_follow_user_a user_b_follow_user_a,
-    IFNULL(
-    (SELECT id FROM pocketbook_friends 
-    WHERE 
-   ((user_a = {:logged_in} 
-		AND 
-	(user_b = fr.user_a or user_b = fr.user_b)) and user_b_follow_user_a = "yes") 
-    or
-    ((user_b = {:logged_in} 
-		AND
-	(user_a = fr.user_a or user_a = fr.user_b)) and user_a_follow_user_b = "yes" )
-    ),'no') as following_me,
+SELECT
+  fr.id AS friendship_id,
+  fr.created AS created,
+  fr.updated AS updated,
+  fr.user_a AS user_a,
+  fr.user_b AS user_b,
+  ua.username AS user_a_name,
+  ub.username AS user_b_name,
+  ua.avatar AS user_a_avatar,
+  ub.avatar AS user_b_avatar,
+  ua.email AS user_a_email,
+  ub.email AS user_b_email,
+  fr.user_a_follow_user_b AS user_a_follow_user_b,
+  fr.user_b_follow_user_a AS user_b_follow_user_a,
 
-    IFNULL(
-    (SELECT id FROM pocketbook_friends 
-    WHERE 
-   ((user_a = {:logged_in} 
-		AND
-	(user_b = fr.user_a or user_b = fr.user_b)) and user_a_follow_user_b = "yes") 
-    or
-    ((user_b = {:logged_in} 
-		AND
-	 (user_a = fr.user_a or user_a = fr.user_b)) and user_b_follow_user_a = "yes" )
-    ),'no') as followed_by_me
+  IFNULL(
+ (SELECT id
+    FROM pocketbook_friends
+    WHERE id=fr.id AND
+    ((user_a = {:logged_in}) OR (user_b = {:logged_in}))
+  ),'no')  AS friendship_exists,
 
-FROM pocketbook_friends as fr
-left JOIN pocketbook_user as ua on ua.id = fr.user_a
-left JOIN pocketbook_user as ub on ub.id = fr.user_b
+  CASE WHEN EXISTS (
+    SELECT id
+    FROM pocketbook_friends
+    WHERE id=fr.id AND
+    ((user_a = {:logged_in} AND user_b_follow_user_a = 'yes') 
+    OR 
+    (user_b = {:logged_in} AND user_a_follow_user_b = 'yes'))
+  ) THEN 'yes' ELSE 'no' END AS following_me,
+
+  CASE WHEN EXISTS (
+    SELECT id
+    FROM pocketbook_friends
+    WHERE id=fr.id AND
+   (
+    (user_a = {:profile_id} AND user_a_follow_user_b = 'yes')
+     OR
+     (user_b = {:profile_id} AND user_b_follow_user_a = 'yes')
+     )
+  ) THEN 'yes' ELSE 'no' END AS followed_by_me
+
+FROM pocketbook_friends AS fr
+INNER JOIN pocketbook_user AS ua ON ua.id = fr.user_a
+INNER JOIN pocketbook_user AS ub ON ub.id = fr.user_b
 WHERE (
-  (fr.user_a = {:profile_id} AND fr.user_b_follow_user_a='yes')
-  OR
-  (fr.user_b = {:profile_id} AND fr.user_a_follow_user_b='yes')
+  fr.user_a = {:profile_id} AND fr.user_b_follow_user_a = 'yes'
 )
-AND 
-(
-  fr.created < {:created} OR (fr.created = {:created} AND fr.id < {:last_id})
+OR (
+  fr.user_b = {:profile_id} AND fr.user_a_follow_user_b = 'yes'
+)
+AND (
+  fr.created < {:created}
+  OR (
+    fr.created = {:created}
+    AND fr.id < {:last_id}
+  )
 )
 ORDER BY fr.created DESC, fr.id DESC
 LIMIT {:limit}
