@@ -20,7 +20,6 @@ routerAdd(
       const result = arrayOf(
         new DynamicModel({
           friendship_id: "",
-
           created: "",
           updated: "",
           user_a: "",
@@ -29,7 +28,9 @@ routerAdd(
           user_b_follow_user_a: "",
           following_me: "",
           followed_by_me: "",
-          friendship_exists: "",
+          friendship_exists:"",
+   
+
           user_a_name: "",
           user_b_name: "",
           user_a_avatar: "",
@@ -59,20 +60,25 @@ SELECT
   fr.user_a_follow_user_b AS user_a_follow_user_b,
   fr.user_b_follow_user_a AS user_b_follow_user_a,
 
-  IFNULL(
- (SELECT id
+ 
+ IFNULL((SELECT id
     FROM pocketbook_friends
-    WHERE id=fr.id AND
-    ((user_a = {:logged_in}) OR (user_b = {:logged_in}))
-  ),'no')  AS friendship_exists,
+    WHERE (
+      (user_a = {:logged_in} AND user_b = fr.user_b )
+    OR
+     (user_b = {:logged_in} AND user_a = fr.user_a)
+     )
+  ),'no') AS friendship_exists,
+
+
 
   CASE WHEN EXISTS (
     SELECT id
     FROM pocketbook_friends
     WHERE id=fr.id AND
-    ((user_a = {:logged_in} AND user_b_follow_user_a = 'yes') 
+    ((user_a = {:logged_in}  AND user_b_follow_user_a = 'yes') 
     OR 
-    (user_b = {:logged_in} AND user_a_follow_user_b = 'yes'))
+    (user_b = {:logged_in} AND user_a_follow_user_b = 'yes' ))
   ) THEN 'yes' ELSE 'no' END AS following_me,
 
   CASE WHEN EXISTS (
@@ -80,9 +86,9 @@ SELECT
     FROM pocketbook_friends
     WHERE id=fr.id AND
    (
-    (user_a = {:profile_id} AND user_a_follow_user_b = 'yes')
+    (user_a = {:logged_in}  AND user_a_follow_user_b = 'yes')
      OR
-     (user_b = {:profile_id} AND user_b_follow_user_a = 'yes')
+     (user_b = {:logged_in}  AND user_b_follow_user_a = 'yes')
      )
   ) THEN 'yes' ELSE 'no' END AS followed_by_me
 

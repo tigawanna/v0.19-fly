@@ -5,7 +5,6 @@
     ((id = fr.id) AND (user_a = '1zq7mwdrk2fys4h') )
     OR
    ((id = fr.id) AND (user_b = '1zq7mwdrk2fys4h') )
-    
     ) 
     as user_a_follow_user_b,
      IFNULL (

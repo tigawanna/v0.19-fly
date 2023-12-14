@@ -60,20 +60,16 @@ routerAdd(
     fr.user_b_follow_user_a user_b_follow_user_a,
 
 
-  CASE WHEN EXISTS (
-    SELECT id
+ IFNULL((SELECT id
     FROM pocketbook_friends
-    WHERE id=fr.id AND
-    ((user_a = {:logged_in}) 
-    OR 
-    (user_b = {:logged_in}))
-  ) THEN 'yes' ELSE 'no' END AS friendship_exists,
+    WHERE id=fr.id AND (user_a = {:logged_in} OR user_b = {:logged_in})
+  ),'no') AS friendship_exists,
+  
 
   CASE WHEN EXISTS (
     SELECT id
     FROM pocketbook_friends
-    WHERE id=fr.id AND
-    ((user_a = {:logged_in} AND user_b_follow_user_a = 'yes') 
+    WHERE id=fr.id AND ((user_a = {:logged_in} AND user_b_follow_user_a = 'yes') 
     OR 
     (user_b = {:logged_in} AND user_a_follow_user_b = 'yes'))
   ) THEN 'yes' ELSE 'no' END AS following_me,

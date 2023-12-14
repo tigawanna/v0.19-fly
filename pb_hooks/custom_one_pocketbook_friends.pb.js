@@ -49,6 +49,7 @@ routerAdd(
     fr.user_b user_b,
     fr.user_a_follow_user_b user_a_follow_user_b,
     fr.user_b_follow_user_a user_b_follow_user_a,
+    
     IFNULL(
     (SELECT id FROM pocketbook_friends 
     WHERE 
