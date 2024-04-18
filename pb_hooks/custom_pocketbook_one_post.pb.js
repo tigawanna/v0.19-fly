@@ -67,7 +67,7 @@ ORDER BY pp.created DESC, pp.id DESC
     return c.json(200, { result });
   } catch (e) {
     return c.json(500, {
-      error: "Error getting one_custom_pocketbook_post " + e.message,
+      error: `Error getting one_custom_pocketbook_post ${e.message}`,
     });
   }
 });

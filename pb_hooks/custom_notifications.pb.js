@@ -37,7 +37,7 @@ routerAdd(
       return c.json(200, { posts: result });
     } catch (e) {
       return c.json(500, {
-        error: " Error getting custom_pocketbook_posts: " + e.message,
+        error: ` Error getting custom_pocketbook_posts: ${e.message}`,
       });
     }
   } /* optional middlewares */

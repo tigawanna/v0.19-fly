@@ -89,7 +89,7 @@ ORDER BY sh."order";
       return c.json(200, { result });
     } catch (e) {
       return c.json(500, {
-        error: " Error getting custom_utilities_one_bill : " + e.message,
+        error: ` Error getting custom_utilities_one_bill : ${e.message}`,
       });
     }
   } /* optional middlewares */

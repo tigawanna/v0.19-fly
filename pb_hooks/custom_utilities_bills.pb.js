@@ -87,7 +87,7 @@ ORDER BY sh."order";
       return c.json(200, { result });
     } catch (e) {
       return c.json(500, {
-        error: " Error getting custom_utility_bills : " + e.message,
+        error: ` Error getting custom_utility_bills : ${e.message}`,
       });
     }
   } /* optional middlewares */

@@ -82,7 +82,7 @@ LIMIT {:limit}
       return c.json(200, { result });
     } catch (e) {
       return c.json(500, {
-        error: " Error getting custom_pocketbook_post_replies: " + e.message,
+        error: ` Error getting custom_pocketbook_post_replies: ${e.message}`,
       });
     }
   } /* optional middlewares */
