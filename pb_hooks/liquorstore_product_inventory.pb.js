@@ -32,18 +32,21 @@ onRecordBeforeCreateRequest((e) => {
   const productQty = e.record?.get("quantity");
   const productSize = e.record?.get("size");
   const productPrice = e.record?.get("price");
+
   if (!productID) {
     throw new ValidationError(
       "Product ID required",
       "Product to be updated requires a valid product ID"
     );
   }
+
   //   console.log(" ==== productId ==== ",productID)
   //   console.log(" ==== quantity ==== ",productQty)
   //   console.log(" ==== size==== ",productSize)
 
   //   fupdate the record accordingly
   const record = $app.dao().findRecordById("liquorstore_products", productID);
+  console.log(" ==== record ==== ", record);
   if (!record) {
     throw new ValidationError("Product to update not found", "Product to be updated should exist");
   }
@@ -95,12 +98,7 @@ onRecordBeforeCreateRequest((e) => {
   form.submit();
 }, "liquorstore_products_inventory");
 
-
-
-
-
 onRecordBeforeUpdateRequest((e) => {
-
   const productID = e.record?.get("product");
   const productQty = e.record?.get("quantity");
   const productSize = e.record?.get("size");
