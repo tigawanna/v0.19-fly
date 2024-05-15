@@ -190,7 +190,7 @@ onRecordBeforeDeleteRequest((e) => {
   const productID = e.record?.get("product");
   const productQty = e.record?.get("quantity");
   const productSize = e.record?.get("size");
-  const productPrice = e.record?.get("price");
+
 
   if (!productID) {
     throw new ValidationError(
