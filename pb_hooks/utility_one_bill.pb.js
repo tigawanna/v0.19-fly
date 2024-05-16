@@ -5,35 +5,36 @@ routerAdd(
   "/custom_utilities_one_bill",
   (c) => {
     try {
-
-        function isParamEmpty(param, default_value) {
-          if (param === "" || param === undefined || param === null) {
-            return default_value;
-          }
-          return param;
+      function isParamEmpty(param, default_value) {
+        if (param === "" || param === undefined || param === null) {
+          return default_value;
         }
-        if (!isParamEmpty(c.queryParam("prev_bill"),undefined) || !isParamEmpty(c.queryParam("curr_bill"),undefined)) {
-              return c.json(400, { error: "missing prev_bill or curr_bill params" });
-        }
+        return param;
+      }
+      if (
+        !isParamEmpty(c.queryParam("prev_bill"), undefined) ||
+        !isParamEmpty(c.queryParam("curr_bill"), undefined)
+      ) {
+        return c.json(400, { error: "missing prev_bill or curr_bill params" });
+      }
       const result = new DynamicModel({
-          shop_id: "",
-          curr_bill_id: "",
-          prev_bill_id: "",
-          shop_number: "",
-          shop_name: "",
-          curr_year: "",
-          curr_month: "",
-          prev_year: "",
-          prev_month: "",
-          list_order: "",
-          current_elec: "",
-          previous_elec: "",
-          elec_diff: "",
-          current_water: "",
-          previous_water: "",
-          water_diff: "",
-        })
-      
+        shop_id: "",
+        curr_bill_id: "",
+        prev_bill_id: "",
+        shop_number: "",
+        shop_name: "",
+        curr_year: "",
+        curr_month: "",
+        prev_year: "",
+        prev_month: "",
+        list_order: "",
+        current_elec: "",
+        previous_elec: "",
+        elec_diff: "",
+        current_water: "",
+        previous_water: "",
+        water_diff: "",
+      });
 
       $app
         ?.dao()
@@ -75,16 +76,14 @@ ORDER BY sh."order";
       `
         )
         ?.bind({
-          curr_year: isParamEmpty(c.queryParam("curr_year"),new Date().getFullYear()),
-          curr_month: isParamEmpty(c.queryParam("curr_month"),new Date().getMonth()),
-          prev_year: isParamEmpty(c.queryParam("prev_year"),new Date().getFullYear()),
-          prev_month: isParamEmpty(c.queryParam("prev_month"),new Date().getMonth()-1),
+          curr_year: isParamEmpty(c.queryParam("curr_year"), new Date().getFullYear()),
+          curr_month: isParamEmpty(c.queryParam("curr_month"), new Date().getMonth()),
+          prev_year: isParamEmpty(c.queryParam("prev_year"), new Date().getFullYear()),
+          prev_month: isParamEmpty(c.queryParam("prev_month"), new Date().getMonth() - 1),
           prev_bill: isParamEmpty(c.queryParam("prev_bill")),
           curr_bill: isParamEmpty(c.queryParam("curr_bill")),
         })
         ?.one(result); // throw an error on db failure
-
-
 
       return c.json(200, { result });
     } catch (e) {
